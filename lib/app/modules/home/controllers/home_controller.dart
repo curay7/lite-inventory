@@ -1,3 +1,5 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:first/app/data/services/notification_services.dart';
 
@@ -5,14 +7,10 @@ class HomeController extends GetxController {
   //TODO: Implement HomeController
 
   final count = 0.obs;
-  var notifyHelper;
+
   @override
   void onInit() {
     super.onInit();
-    print("TEST INIT in View");
-    // notifyHelper = NotifyHelper();
-    // notifyHelper.initializeNotification();
-    // notifyHelper.requestIOSPermissions();
   }
 
   @override
@@ -26,4 +24,11 @@ class HomeController extends GetxController {
   }
 
   void increment() => count.value++;
+
+  void sendNotification(String title, String body) {
+    AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: 1, channelKey: 'test_channel', title: title, body: body));
+    //AwesomeNotifications().actionStream.listen((event) {});
+  }
 }

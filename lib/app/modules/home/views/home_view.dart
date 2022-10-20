@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
 
+final _homeController = Get.find<HomeController>();
+
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
 
@@ -21,12 +23,8 @@ class HomeView extends GetView<HomeController> {
       leading: GestureDetector(
         onTap: () {
           ThemeServices().switchTheme();
-          print("TEST INIT in View");
-          // NotifyHelper().displayNotification(
-          //     title: "Theme Change",
-          //     body: Get.isDarkMode
-          //         ? "Activated Dark Mode"
-          //         : "Activated Light Mode");
+          _homeController.sendNotification('Theme Change',
+              Get.isDarkMode ? "Activated Light Mode" : "Activated Dark Mode");
         },
         child: const Icon(
           Icons.nightlight_round,
