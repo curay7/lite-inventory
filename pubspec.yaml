@@ -10,6 +10,9 @@ dependencies:
   get_storage:
   get_cli: ^1.8.1
   get: 4.6.5
+  intl:
+  google_fonts:
+  date_picker_timeline:
   flutter:
     sdk: flutter
   awesome_notifications:
@@ -21,3 +24,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
