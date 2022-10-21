@@ -72,7 +72,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
         Spacer(),
-        homeHeaderBtn(
+        homeBtn(
           label: "+ Add Task",
           onTap: (() {
             print("TEST Next Page");

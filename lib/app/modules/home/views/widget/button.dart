@@ -1,10 +1,10 @@
 import 'package:first/app/modules/layout/themes.dart';
 import 'package:flutter/material.dart';
 
-class homeHeaderBtn extends StatelessWidget {
+class homeBtn extends StatelessWidget {
   final String label;
   final Function()? onTap;
-  const homeHeaderBtn({Key? key, required this.label, required this.onTap})
+  const homeBtn({Key? key, required this.label, required this.onTap})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class homeHeaderBtn extends StatelessWidget {
           // Change button text when light changes state.
           child: Center(
             child: Text(
-              '+ Add Task',
+              label,
               style: TextStyle(color: Colors.white),
             ),
           )),

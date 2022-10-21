@@ -16,7 +16,7 @@ class Themes {
       brightness: Brightness.light,
       backgroundColor: white,
       appBarTheme: const AppBarTheme(
-        color: white,
+        color: Colors.transparent,
       ));
 
   static final dark = ThemeData(
@@ -32,6 +32,21 @@ TextStyle get subHeadingStyle {
   return GoogleFonts.lato(
       textStyle: TextStyle(
           fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Get.isDarkMode ? Colors.grey[400] : Colors.grey));
+}
+
+TextStyle get inputSubTitleStyle {
+  return GoogleFonts.lato(
+      textStyle: TextStyle(
+          fontSize: 13,
+          color: Get.isDarkMode ? Colors.grey[400] : Colors.grey));
+}
+
+TextStyle get inputTiitleStyle {
+  return GoogleFonts.lato(
+      textStyle: TextStyle(
+          fontSize: 15,
           fontWeight: FontWeight.bold,
           color: Get.isDarkMode ? Colors.grey[400] : Colors.grey));
 }
