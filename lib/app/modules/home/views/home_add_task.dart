@@ -1,9 +1,12 @@
+import 'package:first/app/data/model/task.dart';
 import 'package:first/app/modules/home/views/widget/button.dart';
 import 'package:first/app/modules/home/views/widget/input_field.dart';
 import 'package:first/app/modules/layout/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../controllers/home_controller.dart';
 
 class HomeAddTask extends StatefulWidget {
   const HomeAddTask({Key? key}) : super(key: key);
@@ -13,6 +16,10 @@ class HomeAddTask extends StatefulWidget {
 }
 
 class _HomeAddTaskState extends State<HomeAddTask> {
+  final HomeController homeTaskController = Get.put(HomeController());
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+
   DateTime _selectedDate = DateTime.now();
   String _selectedStartTime =
       DateFormat("hh:mm a").format(DateTime.now()).toString();
@@ -42,6 +49,7 @@ class _HomeAddTaskState extends State<HomeAddTask> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
+      backgroundColor: context.theme.backgroundColor,
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(
@@ -51,13 +59,15 @@ class _HomeAddTaskState extends State<HomeAddTask> {
                 "Add Task",
                 style: headingStyle,
               ),
-              const CustomInputForm(
+              CustomInputForm(
                 title: "Title",
                 hint: 'Enter Title Here',
+                controller: _titleController,
               ),
-              const CustomInputForm(
+              CustomInputForm(
                 title: "Note",
                 hint: 'Enter Note Here',
+                controller: _noteController,
               ),
               CustomInputForm(
                 title: "Date",
@@ -151,7 +161,9 @@ class _HomeAddTaskState extends State<HomeAddTask> {
                 children: [
                   _colorPallete(),
                   Spacer(),
-                  homeBtn(label: "Create Task", onTap: () {})
+                  homeBtn(
+                      label: "Create Task",
+                      onTap: () => {_validateData(), _addTaskToDb()})
                 ],
               )
             ],
@@ -180,6 +192,38 @@ class _HomeAddTaskState extends State<HomeAddTask> {
         )
       ],
     );
+  }
+
+  _addTaskToDb() async {
+    int returnId = await homeTaskController.addTask(
+      task: Task(
+          note: _noteController.text,
+          title: _titleController.text,
+          date: DateFormat.yMd().format(_selectedDate),
+          startTime: _selectedStartTime,
+          endTime: _selectedEndTime,
+          remind: _selectedReminder,
+          repeat: _selectedRepeat,
+          color: _selectedColor,
+          isCompleted: 0),
+    );
+
+    print(returnId);
+  }
+
+  _validateData() {
+    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      Get.back();
+    } else {
+      Get.snackbar("Required", "All fields are Required!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.white,
+          colorText: pinkClr,
+          icon: Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.red,
+          ));
+    }
   }
 
   _colorPallete() {

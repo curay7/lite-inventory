@@ -12,6 +12,7 @@ dependencies:
   get: 4.6.5
   intl:
   google_fonts:
+  sqflite:
   date_picker_timeline:
   flutter:
     sdk: flutter

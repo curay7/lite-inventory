@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:first/app/data/services/db_helper.dart';
 import 'package:first/app/modules/home/bindings/home_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,8 @@ Future<void> main() async {
       channelDescription: 'Notficiations for basic testing',
     )
   ]);
+
+  await DBHelper.initDb();
   await GetStorage.init();
   runApp(
     GetMaterialApp(

@@ -20,6 +20,7 @@ class HomeView extends GetView<HomeController> {
     DateTime _selectedDate = DateTime.now();
     return Scaffold(
       appBar: _appBar(),
+      backgroundColor: context.theme.backgroundColor,
       body: Column(
         children: [
           _addTaskBar(),
