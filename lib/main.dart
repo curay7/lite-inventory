@@ -15,7 +15,7 @@ Future<void> main() async {
     NotificationChannel(
       channelKey: 'test_channel',
       channelName: 'Test Notification',
-      channelDescription: 'Notficiations for basic testing',
+      channelDescription: 'Notficiations for basic testing Aspire',
     )
   ]);
 
