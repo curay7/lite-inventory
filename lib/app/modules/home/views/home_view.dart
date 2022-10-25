@@ -15,13 +15,13 @@ import 'package:intl/intl.dart';
 import 'widget/task_tile.dart';
 
 final _homeController = Get.find<HomeController>();
+DateTime _selectedDate = DateTime.now();
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    DateTime _selectedDate = DateTime.now();
     return Scaffold(
       appBar: _appBar(),
       backgroundColor: context.theme.backgroundColor,
@@ -45,24 +45,51 @@ class HomeView extends GetView<HomeController> {
           return ListView.builder(
             itemCount: _homeController.taskList.length,
             itemBuilder: ((context, index) {
-              return AnimationConfiguration.staggeredList(
-                  position: index,
-                  child: SlideAnimation(
-                    child: FadeInAnimation(
-                        child: Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              _showBottomSheet(
-                                  context, _homeController.taskList[index]);
-                            },
-                            child: TaskTile(_homeController.taskList[index]),
-                          ),
-                        )
-                      ],
-                    )),
-                  ));
+              Task task = _homeController.taskList[index];
+
+              if (task.repeat == 'Daily') {
+                return AnimationConfiguration.staggeredList(
+                    position: index,
+                    child: SlideAnimation(
+                      child: FadeInAnimation(
+                          child: Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                print(_selectedDate);
+                                _showBottomSheet(context, task);
+                              },
+                              child: TaskTile(task),
+                            ),
+                          )
+                        ],
+                      )),
+                    ));
+              }
+
+              if (task.date == DateFormat.yMd().format(_selectedDate)) {
+                return AnimationConfiguration.staggeredList(
+                    position: index,
+                    child: SlideAnimation(
+                      child: FadeInAnimation(
+                          child: Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                print(_selectedDate);
+                                _showBottomSheet(context, task);
+                              },
+                              child: TaskTile(task),
+                            ),
+                          )
+                        ],
+                      )),
+                    ));
+              }
+
+              return Container();
             }),
           );
         }),
@@ -94,6 +121,7 @@ class HomeView extends GetView<HomeController> {
                   label: "Task Completed",
                   onTap: () {
                     _homeController.markCompletedTask(task.id!);
+                    Get.back();
                   },
                   color: primaryClr,
                   context: context),
@@ -233,7 +261,8 @@ class HomeView extends GetView<HomeController> {
               fontSize: 14, fontWeight: FontWeight.w600, color: Colors.grey),
         ),
         onDateChange: (date) {
-          _addDateBar(selectedDate);
+          _homeController.getTask();
+          _selectedDate = date;
         },
       ),
     );
