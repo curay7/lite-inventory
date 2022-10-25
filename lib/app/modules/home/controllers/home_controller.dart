@@ -9,11 +9,12 @@ import '../../../data/model/task.dart';
 class HomeController extends GetxController {
   //TODO: Implement HomeController
 
-  final count = 0.obs;
+  var taskList = <Task>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    getTask();
   }
 
   @override
@@ -26,8 +27,6 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
-
   void sendNotification(String title, String body) {
     AwesomeNotifications().createNotification(
         content: NotificationContent(
@@ -35,7 +34,26 @@ class HomeController extends GetxController {
     //AwesomeNotifications().actionStream.listen((event) {});
   }
 
+  void getTask() async {
+    List<Map<String, dynamic>> tasks = await DBHelper.query();
+    taskList.assignAll(
+      tasks.map(
+        (data) => new Task.fromJson(data),
+      ),
+    );
+  }
+
   Future<int> addTask({Task? task}) async {
     return await DBHelper.insert(task);
+  }
+
+  void delete(Task task) {
+    var id = DBHelper.delete(task);
+    getTask();
+  }
+
+  void markCompletedTask(int id) async {
+    await DBHelper.update(id);
+    getTask();
   }
 }

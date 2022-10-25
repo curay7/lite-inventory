@@ -55,3 +55,11 @@ TextStyle get headingStyle {
   return GoogleFonts.lato(
       textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold));
 }
+
+TextStyle get tileStyle {
+  return GoogleFonts.lato(
+      textStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: Get.isDarkMode ? Colors.white : Colors.black));
+}
