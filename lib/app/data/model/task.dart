@@ -2,6 +2,8 @@ class Task {
   int? id;
   String? title;
   String? note;
+  int? skl;
+  int? qty;
   int? isCompleted;
   String? date;
   String? startTime;
@@ -14,6 +16,8 @@ class Task {
       {this.id,
       this.title,
       this.note,
+      this.skl,
+      this.qty,
       this.isCompleted,
       this.date,
       this.startTime,
@@ -25,6 +29,8 @@ class Task {
     id = json['id'];
     title = json['title'];
     note = json['note'];
+    skl = json['skl'];
+    qty = json['qty'];
     isCompleted = json['isCompleted'];
     date = json['date'];
     startTime = json['startTime'];
@@ -37,6 +43,8 @@ class Task {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['title'] = this.title;
+    data['qty'] = this.qty;
+    data['skl'] = this.skl;
     data['date'] = this.date;
     data['note'] = this.note;
     data['isCompleted'] = this.isCompleted;

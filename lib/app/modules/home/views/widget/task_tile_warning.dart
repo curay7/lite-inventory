@@ -5,9 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../layout/themes.dart';
 
-class TaskTile extends StatelessWidget {
+class TaskTileWarning extends StatelessWidget {
   final Task? task;
-  TaskTile(this.task);
+  TaskTileWarning(this.task);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class TaskTile extends StatelessWidget {
         //  width: SizeConfig.screenWidth * 0.78,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: _getBGClr(task?.color ?? 0),
+          color: pinkClr,
         ),
         child: Row(children: [
           Container(
@@ -112,18 +112,5 @@ class TaskTile extends StatelessWidget {
         ]),
       ),
     );
-  }
-
-  _getBGClr(int no) {
-    switch (no) {
-      case 0:
-        return primaryClr;
-      case 1:
-        return pinkClr;
-      case 2:
-        return yellowClr;
-      default:
-        return primaryClr;
-    }
   }
 }

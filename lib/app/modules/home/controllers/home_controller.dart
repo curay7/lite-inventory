@@ -10,6 +10,7 @@ class HomeController extends GetxController {
   //TODO: Implement HomeController
 
   var taskList = <Task>[].obs;
+  late Task updateTask;
 
   @override
   void onInit() {
@@ -34,6 +35,15 @@ class HomeController extends GetxController {
     //AwesomeNotifications().actionStream.listen((event) {});
   }
 
+  void findProductUpdate(int id) {
+    taskList.forEach((element) {
+      print(element);
+      if (element.id == id) {
+        updateTask = element;
+      }
+    });
+  }
+
   void getTask() async {
     List<Map<String, dynamic>> tasks = await DBHelper.query();
     taskList.assignAll(
@@ -52,8 +62,8 @@ class HomeController extends GetxController {
     getTask();
   }
 
-  void markCompletedTask(int id) async {
-    await DBHelper.update(id);
-    getTask();
+  Future<int> updateProduct({required Task task}) async {
+    int returnId = await DBHelper.update(task);
+    return returnId;
   }
 }

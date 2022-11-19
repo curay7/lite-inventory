@@ -3,15 +3,11 @@ import 'package:flutter/material.dart';
 
 class CustomInputForm extends StatelessWidget {
   final String title;
-  final String hint;
+  final String? hint;
   final TextEditingController? controller;
   final Widget? widget;
   const CustomInputForm(
-      {Key? key,
-      required this.title,
-      required this.hint,
-      this.controller,
-      this.widget})
+      {Key? key, required this.title, this.hint, this.controller, this.widget})
       : super(key: key);
 
   @override

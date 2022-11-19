@@ -10,19 +10,25 @@ import 'package:intl/intl.dart';
 
 import '../controllers/home_controller.dart';
 
-class HomeAddTask extends StatefulWidget {
-  const HomeAddTask({Key? key}) : super(key: key);
+final _homeController = Get.find<HomeController>();
+
+class HomeUpdateProduct extends StatefulWidget {
+  const HomeUpdateProduct({Key? key}) : super(key: key);
 
   @override
-  State<HomeAddTask> createState() => _HomeAddTaskState();
+  State<HomeUpdateProduct> createState() => _HomeUpdateProductState();
 }
 
-class _HomeAddTaskState extends State<HomeAddTask> {
+class _HomeUpdateProductState extends State<HomeUpdateProduct> {
   final HomeController homeTaskController = Get.put(HomeController());
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _noteController = TextEditingController();
-  final TextEditingController _skiController = TextEditingController();
-  final TextEditingController _qtyController = TextEditingController();
+  final TextEditingController _titleController =
+      TextEditingController(text: _homeController.updateTask.title);
+  final TextEditingController _noteController =
+      TextEditingController(text: _homeController.updateTask.note);
+  final TextEditingController _skiController =
+      TextEditingController(text: _homeController.updateTask.skl.toString());
+  final TextEditingController _qtyController =
+      TextEditingController(text: _homeController.updateTask.qty.toString());
 
   DateTime _selectedDate = DateTime.now();
   String _selectedStartTime =
@@ -50,6 +56,11 @@ class _HomeAddTaskState extends State<HomeAddTask> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
@@ -60,15 +71,17 @@ class _HomeAddTaskState extends State<HomeAddTask> {
           child: Column(
             children: [
               Text(
-                "Add Product",
+                "Update Product ${_homeController.updateTask.title}",
                 style: headingStyle,
               ),
               CustomInputForm(
                 title: "Name",
+                hint: 'Enter the product name here',
                 controller: _titleController,
               ),
               CustomInputForm(
                 title: "Note",
+                hint: 'Enter Note Here',
                 controller: _noteController,
               ),
               Row(
@@ -76,6 +89,7 @@ class _HomeAddTaskState extends State<HomeAddTask> {
                   Expanded(
                     child: CustomInputForm(
                       title: "SKL",
+                      hint: 'Enter SKL here',
                       controller: _skiController,
                     ),
                   ),
@@ -85,105 +99,109 @@ class _HomeAddTaskState extends State<HomeAddTask> {
                   Expanded(
                     child: CustomInputForm(
                       title: "Quantity",
+                      hint: "Enter the quantity here",
                       controller: _qtyController,
                     ),
                   ),
                 ],
               ),
-              CustomInputForm(
-                title: "Date",
-                hint: DateFormat.yMd().format(_selectedDate),
-                widget: IconButton(
-                  icon: const Icon(Icons.calendar_today_outlined),
-                  onPressed: () {
-                    _getDateFromUser();
-                  },
+              // CustomInputForm(
+              //   title: "Date",
+              //   hint: DateFormat.yMd().format(_selectedDate),
+              //   widget: IconButton(
+              //     icon: const Icon(Icons.calendar_today_outlined),
+              //     onPressed: () {
+              //       _getDateFromUser();
+              //     },
+              //   ),
+              // ),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: CustomInputForm(
+              //         title: "Start Time",
+              //         hint: _selectedStartTime,
+              //         widget: IconButton(
+              //           icon: const Icon(Icons.access_time_rounded),
+              //           onPressed: () {
+              //             _getTimeFromUser(isStartedTime: true);
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //     const SizedBox(
+              //       width: 12,
+              //     ),
+              //     Expanded(
+              //       child: CustomInputForm(
+              //         title: "End Time",
+              //         hint: _selectedEndTime,
+              //         widget: IconButton(
+              //           icon: const Icon(Icons.access_time_rounded),
+              //           onPressed: () {
+              //             _getTimeFromUser(isStartedTime: false);
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // CustomInputForm(
+              //   title: "Remind",
+              //   hint: "$_selectedReminder Minutes early",
+              //   widget: DropdownButton<int>(
+              //       elevation: 4,
+              //       iconSize: 32,
+              //       style: inputSubTitleStyle,
+              //       underline: Container(
+              //         height: 0,
+              //       ),
+              //       items: reminderList.map((int value) {
+              //         return new DropdownMenuItem<int>(
+              //           value: value,
+              //           child: new Text(value.toString()),
+              //         );
+              //       }).toList(),
+              //       onChanged: (newVal) {
+              //         setState(() {
+              //           _selectedReminder = newVal!;
+              //         });
+              //       }),
+              // ),
+              // CustomInputForm(
+              //   title: "Repeat",
+              //   hint: _selectedRepeat,
+              //   widget: DropdownButton<String>(
+              //       elevation: 4,
+              //       iconSize: 32,
+              //       style: inputSubTitleStyle,
+              //       underline: Container(
+              //         height: 0,
+              //       ),
+              //       items: repeatList.map((String value) {
+              //         return new DropdownMenuItem<String>(
+              //           value: value,
+              //           child: new Text(value.toString()),
+              //         );
+              //       }).toList(),
+              //       onChanged: (newVal) {
+              //         setState(() {
+              //           _selectedRepeat = newVal!;
+              //         });
+              //       }),
+              // ),
+              // const SizedBox(
+              //   height: 8,
+              // ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  children: [
+                    // _colorPallete(),
+                    Spacer(),
+                    homeBtn(label: "Update", onTap: () => {_validateData()})
+                  ],
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomInputForm(
-                      title: "Start Time",
-                      hint: _selectedStartTime,
-                      widget: IconButton(
-                        icon: const Icon(Icons.access_time_rounded),
-                        onPressed: () {
-                          _getTimeFromUser(isStartedTime: true);
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Expanded(
-                    child: CustomInputForm(
-                      title: "End Time",
-                      hint: _selectedEndTime,
-                      widget: IconButton(
-                        icon: const Icon(Icons.access_time_rounded),
-                        onPressed: () {
-                          _getTimeFromUser(isStartedTime: false);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              CustomInputForm(
-                title: "Remind",
-                hint: "$_selectedReminder Minutes early",
-                widget: DropdownButton<int>(
-                    elevation: 4,
-                    iconSize: 32,
-                    style: inputSubTitleStyle,
-                    underline: Container(
-                      height: 0,
-                    ),
-                    items: reminderList.map((int value) {
-                      return new DropdownMenuItem<int>(
-                        value: value,
-                        child: new Text(value.toString()),
-                      );
-                    }).toList(),
-                    onChanged: (newVal) {
-                      setState(() {
-                        _selectedReminder = newVal!;
-                      });
-                    }),
-              ),
-              CustomInputForm(
-                title: "Repeat",
-                hint: _selectedRepeat,
-                widget: DropdownButton<String>(
-                    elevation: 4,
-                    iconSize: 32,
-                    style: inputSubTitleStyle,
-                    underline: Container(
-                      height: 0,
-                    ),
-                    items: repeatList.map((String value) {
-                      return new DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value.toString()),
-                      );
-                    }).toList(),
-                    onChanged: (newVal) {
-                      setState(() {
-                        _selectedRepeat = newVal!;
-                      });
-                    }),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  _colorPallete(),
-                  Spacer(),
-                  homeBtn(label: "Create", onTap: () => {_validateData()})
-                ],
               ),
               SizedBox(
                 height: 20,
@@ -216,8 +234,8 @@ class _HomeAddTaskState extends State<HomeAddTask> {
     );
   }
 
-  _addTaskToDb() async {
-    int returnId = await homeTaskController.addTask(
+  _updateProductToDb() async {
+    Future<int> returnId = homeTaskController.updateProduct(
       task: Task(
           note: _noteController.text,
           qty: 77,
@@ -231,13 +249,11 @@ class _HomeAddTaskState extends State<HomeAddTask> {
           color: _selectedColor,
           isCompleted: 0),
     );
-
-    print(returnId);
   }
 
   _validateData() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
-      _addTaskToDb();
+      _updateProductToDb();
       Get.back();
     } else {
       Get.snackbar("Required", "All fields are Required!",

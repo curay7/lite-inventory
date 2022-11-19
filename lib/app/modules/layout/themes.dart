@@ -39,8 +39,24 @@ TextStyle get subHeadingStyle {
 TextStyle get inputSubTitleStyle {
   return GoogleFonts.lato(
       textStyle: TextStyle(
-          fontSize: 13,
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+          color: Get.isDarkMode ? Color(0xFFFFB746) : Colors.grey[900]));
+}
+
+TextStyle get inputHintSubTitleStyle {
+  return GoogleFonts.lato(
+      textStyle: TextStyle(
+          fontSize: 14,
           color: Get.isDarkMode ? Colors.grey[400] : Colors.grey));
+}
+
+TextStyle get inputHintStyle {
+  return GoogleFonts.lato(
+      textStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 17,
+          color: Get.isDarkMode ? Colors.red[400] : Colors.red));
 }
 
 TextStyle get inputTiitleStyle {

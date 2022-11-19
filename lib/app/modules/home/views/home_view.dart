@@ -1,6 +1,7 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:first/app/data/services/theme_services.dart';
 import 'package:first/app/modules/home/views/home_add_task.dart';
+import 'package:first/app/modules/home/views/home_update_product.dart';
 import 'package:first/app/modules/home/views/widget/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,11 @@ import '../controllers/home_controller.dart';
 import 'package:intl/intl.dart';
 
 import 'widget/task_tile.dart';
+import 'widget/task_tile_warning.dart';
 
 final _homeController = Get.find<HomeController>();
 DateTime _selectedDate = DateTime.now();
+DateTime _updateinitialSelectedDate = DateTime.now();
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
@@ -32,13 +35,101 @@ class HomeView extends GetView<HomeController> {
           const SizedBox(
             height: 17,
           ),
-          _showTask()
+          _showSelectedDateProduct()
         ],
       ),
     );
   }
 
-  _showTask() {
+  _showSelectedDateProduct() {
+    return Expanded(
+      child: Obx(
+        (() {
+          return Stack(
+            children: [
+              ((_selectedDate.day != DateTime.now().day) ||
+                      (_selectedDate.month != DateTime.now().month) ||
+                      (_selectedDate.year != DateTime.now().year))
+                  ? Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            _selectedDate = DateTime.now();
+                            print(_selectedDate);
+                          },
+                          child: Icon(Icons.repeat)),
+                    )
+                  : Container(),
+              Padding(
+                padding: ((_selectedDate.day != DateTime.now().day) ||
+                        (_selectedDate.month != DateTime.now().month) ||
+                        (_selectedDate.year != DateTime.now().year))
+                    ? const EdgeInsets.only(top: 50)
+                    : EdgeInsets.all(0),
+                child: ListView.builder(
+                  itemCount: _homeController.taskList.length,
+                  itemBuilder: ((context, index) {
+                    Task task = _homeController.taskList[index];
+
+                    print(
+                        "Test 1 ${_selectedDate.day}  Test 2 ${DateTime.now().day}");
+                    if ((_selectedDate.day == DateTime.now().day) &&
+                        (_selectedDate.month == DateTime.now().month) &&
+                        (_selectedDate.year == DateTime.now().year)) {
+                      return AnimationConfiguration.staggeredList(
+                        position: index,
+                        child: SlideAnimation(
+                          child: FadeInAnimation(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      print(_selectedDate);
+                                      _showBottomSheet(context, task);
+                                    },
+                                    child: TaskTile(task),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (task.date == DateFormat.yMd().format(_selectedDate)) {
+                      return AnimationConfiguration.staggeredList(
+                          position: index,
+                          child: SlideAnimation(
+                            child: FadeInAnimation(
+                                child: Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _showBottomSheet(context, task);
+                                    },
+                                    child: TaskTileWarning(task),
+                                  ),
+                                )
+                              ],
+                            )),
+                          ));
+                    }
+
+                    return Container();
+                  }),
+                ),
+              )
+            ],
+          );
+        }),
+      ),
+    );
+  }
+
+  _showListProduct() {
     return Expanded(
       child: Obx(
         (() {
@@ -47,46 +138,27 @@ class HomeView extends GetView<HomeController> {
             itemBuilder: ((context, index) {
               Task task = _homeController.taskList[index];
 
-              if (task.repeat == 'Daily') {
+              if (task.title!.isNotEmpty) {
                 return AnimationConfiguration.staggeredList(
-                    position: index,
-                    child: SlideAnimation(
-                      child: FadeInAnimation(
-                          child: Row(
+                  position: index,
+                  child: SlideAnimation(
+                    child: FadeInAnimation(
+                      child: Row(
                         children: [
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                print(_selectedDate);
+                                _homeController.getTask();
                                 _showBottomSheet(context, task);
                               },
                               child: TaskTile(task),
                             ),
                           )
                         ],
-                      )),
-                    ));
-              }
-
-              if (task.date == DateFormat.yMd().format(_selectedDate)) {
-                return AnimationConfiguration.staggeredList(
-                    position: index,
-                    child: SlideAnimation(
-                      child: FadeInAnimation(
-                          child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                print(_selectedDate);
-                                _showBottomSheet(context, task);
-                              },
-                              child: TaskTile(task),
-                            ),
-                          )
-                        ],
-                      )),
-                    ));
+                      ),
+                    ),
+                  ),
+                );
               }
 
               return Container();
@@ -118,10 +190,12 @@ class HomeView extends GetView<HomeController> {
           (task.isCompleted == 1)
               ? Container()
               : _bottomSheetBotton(
-                  label: "Task Completed",
+                  label: "Update Product",
                   onTap: () {
-                    _homeController.markCompletedTask(task.id!);
-                    Get.back();
+                    // _homeController.markCompletedTask(task.id!);
+                    //_homeController.productIdUpdate.value = task.id!;
+                    _homeController.findProductUpdate(task.id!);
+                    Get.to(HomeUpdateProduct());
                   },
                   color: primaryClr,
                   context: context),
@@ -227,7 +301,7 @@ class HomeView extends GetView<HomeController> {
         ),
         Spacer(),
         homeBtn(
-          label: "+ Add Task",
+          label: "+ Product",
           onTap: (() async {
             print("TEST Next Page");
             await Get.to(HomeAddTask());
@@ -245,7 +319,7 @@ class HomeView extends GetView<HomeController> {
         DateTime.now(),
         height: 100,
         width: 80,
-        initialSelectedDate: DateTime.now(),
+        initialSelectedDate: _updateinitialSelectedDate,
         selectedTextColor: Colors.white,
         selectionColor: primaryClr,
         dateTextStyle: GoogleFonts.lato(

@@ -11,6 +11,7 @@ class DBHelper {
     if (_db != null) {
       return;
     }
+
     try {
       String _path = await getDatabasesPath() + 'tasks.db';
       _db = await openDatabase(
@@ -23,6 +24,8 @@ class DBHelper {
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "title STRING, note TEXT, date String,"
             "startTime STRING,endTime String,"
+            "skl INTEGER, "
+            "qty INTEGER, "
             "remind INTEGER, repeat STRING, "
             "color INTEGER, "
             "isCompleted INTEGER)",
@@ -47,11 +50,19 @@ class DBHelper {
     return await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
   }
 
-  static update(int id) async {
-    return await _db!.rawUpdate('''
-              UPDATE task
-              SET isCompleted = ?
-              WHERE id =?
-            ''', [1, id]);
+  static update(Task task) async {
+    print("DATABASE");
+    print(task.title);
+    print(task.skl);
+    print(task.qty);
+    final data = {'title': task.title, 'skl': 777, 'qty': 777};
+    return await _db!
+        .update(_tableName, data, where: "id = ?", whereArgs: [task.id]);
+    // return await _db!.rawUpdate('''
+    //           UPDATE task
+    //           SET isCompleted = ?
+    //           SET title = ?
+    //           WHERE id =?
+    //         ''', [1, task.title, task.id]);
   }
 }
