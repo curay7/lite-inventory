@@ -210,7 +210,7 @@ class HomeView extends GetView<HomeController> {
               color: primaryClr,
               context: context),
           _bottomSheetBotton(
-              label: "Delete Task",
+              label: "Delete Product",
               onTap: () {
                 _homeController.delete(task);
                 Get.back();
@@ -282,7 +282,7 @@ class HomeView extends GetView<HomeController> {
       // ignore: prefer_const_literals_to_create_immutables
       actions: [
         CircleAvatar(
-          backgroundImage: AssetImage("assets/images/cat.png"),
+          backgroundImage: AssetImage("assets/images/profile.jpg"),
         ),
         SizedBox(
           width: 20,

@@ -180,7 +180,7 @@ class _HomeAddTaskState extends State<HomeAddTask> {
               ),
               Row(
                 children: [
-                  _colorPallete(),
+                  //    _colorPallete(),
                   Spacer(),
                   homeBtn(label: "Create", onTap: () => {_validateData()})
                 ],
@@ -207,7 +207,7 @@ class _HomeAddTaskState extends State<HomeAddTask> {
       // ignore: prefer_const_literals_to_create_immutables
       actions: [
         CircleAvatar(
-          backgroundImage: AssetImage("assets/images/cat.png"),
+          backgroundImage: AssetImage("assets/images/profile.jpg"),
         ),
         SizedBox(
           width: 20,
@@ -227,7 +227,7 @@ class _HomeAddTaskState extends State<HomeAddTask> {
           startTime: _selectedStartTime,
           endTime: _selectedEndTime,
           remind: _selectedReminder,
-          color: _selectedColor,
+          color: 0,
           isCompleted: 0),
     );
 

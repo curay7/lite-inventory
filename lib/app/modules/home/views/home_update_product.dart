@@ -221,7 +221,7 @@ class _HomeUpdateProductState extends State<HomeUpdateProduct> {
       // ignore: prefer_const_literals_to_create_immutables
       actions: [
         CircleAvatar(
-          backgroundImage: AssetImage("assets/images/cat.png"),
+          backgroundImage: AssetImage("assets/images/profile.jpg"),
         ),
         SizedBox(
           width: 20,
