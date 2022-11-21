@@ -27,6 +27,7 @@ class _HomeUpdateProductState extends State<HomeUpdateProduct> {
       TextEditingController(text: _homeController.updateTask.note);
   final TextEditingController _skiController =
       TextEditingController(text: _homeController.updateTask.skl.toString());
+
   final TextEditingController _qtyController =
       TextEditingController(text: _homeController.updateTask.qty.toString());
 
@@ -38,9 +39,6 @@ class _HomeUpdateProductState extends State<HomeUpdateProduct> {
 
   int _selectedReminder = 7;
   List<int> reminderList = [1, 2, 3, 4, 5, 6, 7];
-
-  String _selectedRepeat = "None";
-  List<String> repeatList = ["None", "Daily", "Weekly", "Monthly"];
 
   int _selectedColor = 0;
   // Initial Selected Value
@@ -76,12 +74,10 @@ class _HomeUpdateProductState extends State<HomeUpdateProduct> {
               ),
               CustomInputForm(
                 title: "Name",
-                hint: 'Enter the product name here',
                 controller: _titleController,
               ),
               CustomInputForm(
                 title: "Note",
-                hint: 'Enter Note Here',
                 controller: _noteController,
               ),
               Row(
@@ -236,16 +232,16 @@ class _HomeUpdateProductState extends State<HomeUpdateProduct> {
 
   _updateProductToDb() async {
     Future<int> returnId = homeTaskController.updateProduct(
+      id: _homeController.updateTask.id!,
       task: Task(
           note: _noteController.text,
-          qty: 77,
-          skl: 77,
+          qty: int.parse(_qtyController.text),
+          skl: int.parse(_skiController.text),
           title: _titleController.text,
           date: DateFormat.yMd().format(_selectedDate),
           startTime: _selectedStartTime,
           endTime: _selectedEndTime,
           remind: _selectedReminder,
-          repeat: _selectedRepeat,
           color: _selectedColor,
           isCompleted: 0),
     );

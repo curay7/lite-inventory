@@ -27,9 +27,9 @@ class TaskTile extends StatelessWidget {
             width: 80,
             height: 70,
             margin: EdgeInsets.only(right: 20),
-            color: Colors.white,
+            color: Colors.transparent,
             child: Image(
-              image: AssetImage("assets/images/cat.png"),
+              image: AssetImage("assets/images/box-transparent.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -59,13 +59,13 @@ class TaskTile extends StatelessWidget {
                     ),
                     SizedBox(width: 4),
                     Text(
-                      "Quantity ${task!.skl}",
+                      "Quantity ${task!.qty}",
                       style: GoogleFonts.lato(
                         textStyle:
                             TextStyle(fontSize: 13, color: Colors.grey[100]),
                       ),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 10),
                     Icon(
                       Icons.gif_box,
                       color: Colors.grey[200],
@@ -73,7 +73,7 @@ class TaskTile extends StatelessWidget {
                     ),
                     SizedBox(width: 4),
                     Text(
-                      "SKL ${task!.qty}",
+                      "SKL ${task!.skl}",
                       style: GoogleFonts.lato(
                         textStyle:
                             TextStyle(fontSize: 13, color: Colors.grey[100]),

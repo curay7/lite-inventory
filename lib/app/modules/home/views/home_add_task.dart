@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../controllers/home_controller.dart';
+import 'widget/input_field_number.dart';
 
 class HomeAddTask extends StatefulWidget {
   const HomeAddTask({Key? key}) : super(key: key);
@@ -33,7 +34,6 @@ class _HomeAddTaskState extends State<HomeAddTask> {
   int _selectedReminder = 7;
   List<int> reminderList = [1, 2, 3, 4, 5, 6, 7];
 
-  String _selectedRepeat = "None";
   List<String> repeatList = ["None", "Daily", "Weekly", "Monthly"];
 
   int _selectedColor = 0;
@@ -74,7 +74,7 @@ class _HomeAddTaskState extends State<HomeAddTask> {
               Row(
                 children: [
                   Expanded(
-                    child: CustomInputForm(
+                    child: CustomInputFormNumber(
                       title: "SKL",
                       controller: _skiController,
                     ),
@@ -83,12 +83,34 @@ class _HomeAddTaskState extends State<HomeAddTask> {
                     width: 12,
                   ),
                   Expanded(
-                    child: CustomInputForm(
+                    child: CustomInputFormNumber(
                       title: "Quantity",
                       controller: _qtyController,
                     ),
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 70,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    height: 1,
+                    width: 100,
+                    color: Colors.black,
+                  ),
+                  Text("Other Delivery"),
+                  Container(
+                    height: 1,
+                    width: 100,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
               ),
               CustomInputForm(
                 title: "Date",
@@ -153,28 +175,6 @@ class _HomeAddTaskState extends State<HomeAddTask> {
                       });
                     }),
               ),
-              CustomInputForm(
-                title: "Repeat",
-                hint: _selectedRepeat,
-                widget: DropdownButton<String>(
-                    elevation: 4,
-                    iconSize: 32,
-                    style: inputSubTitleStyle,
-                    underline: Container(
-                      height: 0,
-                    ),
-                    items: repeatList.map((String value) {
-                      return new DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value.toString()),
-                      );
-                    }).toList(),
-                    onChanged: (newVal) {
-                      setState(() {
-                        _selectedRepeat = newVal!;
-                      });
-                    }),
-              ),
               const SizedBox(
                 height: 8,
               ),
@@ -220,14 +220,13 @@ class _HomeAddTaskState extends State<HomeAddTask> {
     int returnId = await homeTaskController.addTask(
       task: Task(
           note: _noteController.text,
-          qty: 77,
-          skl: 77,
+          qty: int.parse(_skiController.text),
+          skl: int.parse(_qtyController.text),
           title: _titleController.text,
           date: DateFormat.yMd().format(_selectedDate),
           startTime: _selectedStartTime,
           endTime: _selectedEndTime,
           remind: _selectedReminder,
-          repeat: _selectedRepeat,
           color: _selectedColor,
           isCompleted: 0),
     );

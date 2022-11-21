@@ -20,17 +20,17 @@ class TaskTileWarning extends StatelessWidget {
         //  width: SizeConfig.screenWidth * 0.78,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: pinkClr,
+          color: (task!.qty! < 5) ? pinkClr : yellowClr,
         ),
         child: Row(children: [
           Container(
             width: 80,
             height: 70,
             margin: EdgeInsets.only(right: 20),
-            color: Colors.white,
+            color: Colors.transparent,
             child: Image(
-              image: AssetImage("assets/images/cat.png"),
-              fit: BoxFit.cover,
+              image: AssetImage("assets/images/box-transparent.png"),
+              fit: BoxFit.fitWidth,
             ),
           ),
           Expanded(

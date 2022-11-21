@@ -22,11 +22,11 @@ class DBHelper {
           return db.execute(
             "CREATE TABLE $_tableName("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "title STRING, note TEXT, date String,"
+            "title TEXT, note TEXT, date String,"
             "startTime STRING,endTime String,"
             "skl INTEGER, "
             "qty INTEGER, "
-            "remind INTEGER, repeat STRING, "
+            "remind INTEGER, "
             "color INTEGER, "
             "isCompleted INTEGER)",
           );
@@ -50,19 +50,18 @@ class DBHelper {
     return await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
   }
 
-  static update(Task task) async {
+  static update({required int id, required Task task}) async {
     print("DATABASE");
-    print(task.title);
-    print(task.skl);
-    print(task.qty);
-    final data = {'title': task.title, 'skl': 777, 'qty': 777};
-    return await _db!
-        .update(_tableName, data, where: "id = ?", whereArgs: [task.id]);
-    // return await _db!.rawUpdate('''
-    //           UPDATE task
-    //           SET isCompleted = ?
-    //           SET title = ?
-    //           WHERE id =?
-    //         ''', [1, task.title, task.id]);
+    print(id);
+    // print(task.skl);
+    // print(task.qty);
+    // final data = {'title': task.title, 'skl': 777, 'qty': 777};
+    // return await _db!
+    //     .update(_tableName, data, where: "id = ?", whereArgs: [task.id]);
+    return await _db!.rawUpdate('''
+              UPDATE task
+              SET isCompleted = ?, title = ? , skl = ? , qty = ?
+              WHERE id =?
+            ''', [1, task.title, task.skl, task.qty, id]);
   }
 }

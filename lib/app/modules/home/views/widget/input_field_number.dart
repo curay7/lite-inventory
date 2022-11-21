@@ -2,12 +2,12 @@ import 'package:first/app/modules/layout/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CustomInputForm extends StatelessWidget {
+class CustomInputFormNumber extends StatelessWidget {
   final String title;
   final String? hint;
   final TextEditingController? controller;
   final Widget? widget;
-  const CustomInputForm(
+  const CustomInputFormNumber(
       {Key? key, required this.title, this.hint, this.controller, this.widget})
       : super(key: key);
 
@@ -36,10 +36,8 @@ class CustomInputForm extends StatelessWidget {
                     autofocus: false,
                     controller: controller,
                     cursorColor: Colors.grey,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.singleLineFormatter
-                    ],
                     style: inputSubTitleStyle,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
                       hintText: hint,
                       border: InputBorder.none,

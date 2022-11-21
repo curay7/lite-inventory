@@ -10,6 +10,7 @@ class HomeController extends GetxController {
   //TODO: Implement HomeController
 
   var taskList = <Task>[].obs;
+  Rx<DateTime> selectedDate = DateTime.now().obs;
   late Task updateTask;
 
   @override
@@ -62,8 +63,9 @@ class HomeController extends GetxController {
     getTask();
   }
 
-  Future<int> updateProduct({required Task task}) async {
-    int returnId = await DBHelper.update(task);
+  Future<int> updateProduct({required int id, Task? task}) async {
+    int returnId = await DBHelper.update(id: id, task: task!);
+    getTask();
     return returnId;
   }
 }

@@ -17,7 +17,7 @@ import 'widget/task_tile.dart';
 import 'widget/task_tile_warning.dart';
 
 final _homeController = Get.find<HomeController>();
-DateTime _selectedDate = DateTime.now();
+
 DateTime _updateinitialSelectedDate = DateTime.now();
 
 class HomeView extends GetView<HomeController> {
@@ -31,7 +31,7 @@ class HomeView extends GetView<HomeController> {
       body: Column(
         children: [
           _addTaskBar(),
-          _addDateBar(_selectedDate),
+          _addDateBar(_homeController.selectedDate),
           const SizedBox(
             height: 17,
           ),
@@ -47,23 +47,32 @@ class HomeView extends GetView<HomeController> {
         (() {
           return Stack(
             children: [
-              ((_selectedDate.day != DateTime.now().day) ||
-                      (_selectedDate.month != DateTime.now().month) ||
-                      (_selectedDate.year != DateTime.now().year))
+              ((_homeController.selectedDate.value.day != DateTime.now().day) ||
+                      (_homeController.selectedDate.value.month !=
+                          DateTime.now().month) ||
+                      (_homeController.selectedDate.value.year !=
+                          DateTime.now().year))
                   ? Padding(
                       padding: EdgeInsets.only(left: 20),
                       child: ElevatedButton(
                           onPressed: () {
-                            _selectedDate = DateTime.now();
-                            print(_selectedDate);
+                            _homeController.selectedDate.value = DateTime.now();
+                            // Get.toNamed("/splash");
+                            // _selectedDate = DateTime.now();
+                            // print(_selectedDate);
+                            // _homeController.getTask();
+                            // () {};
                           },
                           child: Icon(Icons.repeat)),
                     )
                   : Container(),
               Padding(
-                padding: ((_selectedDate.day != DateTime.now().day) ||
-                        (_selectedDate.month != DateTime.now().month) ||
-                        (_selectedDate.year != DateTime.now().year))
+                padding: ((_homeController.selectedDate.value.day !=
+                            DateTime.now().day) ||
+                        (_homeController.selectedDate.value.month !=
+                            DateTime.now().month) ||
+                        (_homeController.selectedDate.value.year !=
+                            DateTime.now().year))
                     ? const EdgeInsets.only(top: 50)
                     : EdgeInsets.all(0),
                 child: ListView.builder(
@@ -72,10 +81,13 @@ class HomeView extends GetView<HomeController> {
                     Task task = _homeController.taskList[index];
 
                     print(
-                        "Test 1 ${_selectedDate.day}  Test 2 ${DateTime.now().day}");
-                    if ((_selectedDate.day == DateTime.now().day) &&
-                        (_selectedDate.month == DateTime.now().month) &&
-                        (_selectedDate.year == DateTime.now().year)) {
+                        "Test 1 ${_homeController.selectedDate.value.day}  Test 2 ${DateTime.now().day}");
+                    if ((_homeController.selectedDate.value.day ==
+                            DateTime.now().day) &&
+                        (_homeController.selectedDate.value.month ==
+                            DateTime.now().month) &&
+                        (_homeController.selectedDate.value.year ==
+                            DateTime.now().year)) {
                       return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(
@@ -85,7 +97,7 @@ class HomeView extends GetView<HomeController> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      print(_selectedDate);
+                                      print(_homeController.selectedDate.value);
                                       _showBottomSheet(context, task);
                                     },
                                     child: TaskTile(task),
@@ -98,7 +110,9 @@ class HomeView extends GetView<HomeController> {
                       );
                     }
 
-                    if (task.date == DateFormat.yMd().format(_selectedDate)) {
+                    if (task.date ==
+                        DateFormat.yMd()
+                            .format(_homeController.selectedDate.value)) {
                       return AnimationConfiguration.staggeredList(
                           position: index,
                           child: SlideAnimation(
@@ -172,9 +186,7 @@ class HomeView extends GetView<HomeController> {
   _showBottomSheet(BuildContext context, Task task) {
     Get.bottomSheet(Container(
       padding: EdgeInsets.only(top: 4),
-      height: (task.isCompleted == 1)
-          ? MediaQuery.of(context).size.height * 0.24
-          : MediaQuery.of(context).size.height * 0.32,
+      height: MediaQuery.of(context).size.height * 0.32,
       color: Get.isDarkMode ? darkGrayClr : Colors.white,
       child: Column(
         children: [
@@ -187,18 +199,16 @@ class HomeView extends GetView<HomeController> {
                 color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300]),
           ),
           Spacer(),
-          (task.isCompleted == 1)
-              ? Container()
-              : _bottomSheetBotton(
-                  label: "Update Product",
-                  onTap: () {
-                    // _homeController.markCompletedTask(task.id!);
-                    //_homeController.productIdUpdate.value = task.id!;
-                    _homeController.findProductUpdate(task.id!);
-                    Get.to(HomeUpdateProduct());
-                  },
-                  color: primaryClr,
-                  context: context),
+          _bottomSheetBotton(
+              label: "Update Product",
+              onTap: () {
+                // _homeController.markCompletedTask(task.id!);
+                //_homeController.productIdUpdate.value = task.id!;
+                _homeController.findProductUpdate(task.id!);
+                Get.to(HomeUpdateProduct());
+              },
+              color: primaryClr,
+              context: context),
           _bottomSheetBotton(
               label: "Delete Task",
               onTap: () {
@@ -319,7 +329,7 @@ class HomeView extends GetView<HomeController> {
         DateTime.now(),
         height: 100,
         width: 80,
-        initialSelectedDate: _updateinitialSelectedDate,
+        initialSelectedDate: _homeController.selectedDate.value,
         selectedTextColor: Colors.white,
         selectionColor: primaryClr,
         dateTextStyle: GoogleFonts.lato(
@@ -336,7 +346,7 @@ class HomeView extends GetView<HomeController> {
         ),
         onDateChange: (date) {
           _homeController.getTask();
-          _selectedDate = date;
+          _homeController.selectedDate.value = date;
         },
       ),
     );
