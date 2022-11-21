@@ -25,18 +25,20 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar(),
-      backgroundColor: context.theme.backgroundColor,
-      body: Column(
-        children: [
-          _addTaskBar(),
-          _addDateBar(_homeController.selectedDate),
-          const SizedBox(
-            height: 17,
-          ),
-          _showSelectedDateProduct()
-        ],
+    return SafeArea(
+      child: Scaffold(
+        // appBar: _appBar(),
+        backgroundColor: context.theme.backgroundColor,
+        body: Column(
+          children: [
+            _addTaskBar(),
+            _addDateBar(_homeController.selectedDate),
+            const SizedBox(
+              height: 17,
+            ),
+            _showSelectedDateProduct()
+          ],
+        ),
       ),
     );
   }
@@ -186,7 +188,7 @@ class HomeView extends GetView<HomeController> {
   _showBottomSheet(BuildContext context, Task task) {
     Get.bottomSheet(Container(
       padding: EdgeInsets.only(top: 4),
-      height: MediaQuery.of(context).size.height * 0.32,
+      height: MediaQuery.of(context).size.height * 0.40,
       color: Get.isDarkMode ? darkGrayClr : Colors.white,
       child: Column(
         children: [
@@ -270,15 +272,15 @@ class HomeView extends GetView<HomeController> {
   _appBar() {
     return AppBar(
       elevation: 0,
-      leading: GestureDetector(
-        onTap: () {
-          ThemeServices().switchTheme();
-          _homeController.sendNotification('Theme Change',
-              Get.isDarkMode ? "Activated Light Mode" : "Activated Dark Mode");
-        },
-        child: Icon(CupertinoIcons.moon_stars,
-            size: 20, color: Color.fromARGB(255, 110, 108, 108)),
-      ),
+      // leading: GestureDetector(
+      //   onTap: () {
+      //     ThemeServices().switchTheme();
+      //     _homeController.sendNotification('Theme Change',
+      //         Get.isDarkMode ? "Activated Light Mode" : "Activated Dark Mode");
+      //   },
+      //   child: Icon(CupertinoIcons.moon_stars,
+      //       size: 20, color: Color.fromARGB(255, 110, 108, 108)),
+      // ),
       // ignore: prefer_const_literals_to_create_immutables
       actions: [
         CircleAvatar(
@@ -293,7 +295,32 @@ class HomeView extends GetView<HomeController> {
 
   _addTaskBar() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        SizedBox(
+          width: 12,
+        ),
+        GestureDetector(
+          onTap: () {
+            ThemeServices().switchTheme();
+            _homeController.sendNotification(
+                'Theme Change',
+                Get.isDarkMode
+                    ? "Activated Light Mode"
+                    : "Activated Dark Mode");
+          },
+          child: Icon(
+            CupertinoIcons.moon_stars,
+            size: 50,
+            color: Color.fromARGB(255, 110, 108, 108),
+            shadows: <Shadow>[
+              Shadow(
+                  color: Get.isDarkMode ? Colors.white : Colors.black,
+                  blurRadius: 15.0)
+            ],
+          ),
+        ),
+
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -309,15 +336,15 @@ class HomeView extends GetView<HomeController> {
             ],
           ),
         ),
-        Spacer(),
-        homeBtn(
-          label: "+ Product",
-          onTap: (() async {
-            print("TEST Next Page");
-            await Get.to(HomeAddTask());
-            _homeController.getTask();
-          }),
-        )
+
+        // homeBtn(
+        //   label: "+ Product",
+        // onTap: (() async {
+        //   print("TEST Next Page");
+        //   await Get.to(HomeAddTask());
+        //   _homeController.getTask();
+        // }),
+        // )
       ],
     );
   }

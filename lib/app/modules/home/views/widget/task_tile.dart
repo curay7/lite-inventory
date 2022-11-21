@@ -52,33 +52,45 @@ class TaskTile extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.gif_box,
-                      color: Colors.grey[200],
-                      size: 18,
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      "Quantity ${task!.qty}",
-                      style: GoogleFonts.lato(
-                        textStyle:
-                            TextStyle(fontSize: 13, color: Colors.grey[100]),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Icon(
-                      Icons.gif_box,
-                      color: Colors.grey[200],
-                      size: 18,
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      "SKL ${task!.skl}",
-                      style: GoogleFonts.lato(
-                        textStyle:
-                            TextStyle(fontSize: 13, color: Colors.grey[100]),
-                      ),
-                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.gif_box,
+                              color: Colors.grey[200],
+                              size: 18,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              "Quantity : ${task!.qty}",
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                                    fontSize: 13, color: Colors.grey[100]),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.gif_box,
+                              color: Colors.grey[200],
+                              size: 18,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              "SKL : ${task!.skl}",
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                                    fontSize: 13, color: Colors.grey[100]),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
                   ],
                 ),
                 SizedBox(height: 12),

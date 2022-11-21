@@ -18,6 +18,11 @@ dependencies:
   flutter:
     sdk: flutter
   awesome_notifications:
+  persistent_bottom_nav_bar_v2: ^4.2.6
+  fancy_bottom_navigation: ^0.3.3
+  animated_bottom_navigation_bar: ^1.1.0
+  auto_size_text: ^3.0.0
+  circular_reveal_animation: ^2.0.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
