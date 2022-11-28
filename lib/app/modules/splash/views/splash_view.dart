@@ -39,11 +39,11 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/images/resaylogo.png',
-                  width: double.infinity,
-                  height: 140,
-                  fit: BoxFit.fitHeight,
+                Container(
+                  child: Image.asset(
+                    'assets/images/resaylogo.png',
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),

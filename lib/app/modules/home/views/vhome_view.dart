@@ -1,8 +1,10 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:first/app/data/services/theme_services.dart';
 import 'package:first/app/modules/home/views/home_add_task.dart';
 import 'package:first/app/modules/home/views/home_update_product.dart';
 import 'package:first/app/modules/home/views/widget/button.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -214,8 +216,54 @@ class HomeView extends GetView<HomeController> {
           _bottomSheetBotton(
               label: "Delete Product",
               onTap: () {
-                _homeController.delete(task);
-                Get.back();
+                Alert(
+                  context: context,
+                  type: AlertType.warning,
+                  title: "Warning",
+                  desc: "This Product will not be retrive after it deleted",
+                  buttons: [
+                    DialogButton(
+                      child: Text(
+                        "Confirm",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () {
+                        final snackBar = SnackBar(
+                          /// need to set following properties for best effect of awesome_snackbar_content
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: 'Delete Product!',
+                            message: 'The Product has been deleted',
+
+                            /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                            contentType: ContentType.success,
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                        _homeController.delete(task);
+
+                        Get.back();
+                      },
+                      color: Color.fromRGBO(0, 179, 134, 1.0),
+                    ),
+                    DialogButton(
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      gradient: LinearGradient(colors: [
+                        Color.fromRGBO(116, 116, 191, 1.0),
+                        Color.fromRGBO(52, 138, 199, 1.0)
+                      ]),
+                    )
+                  ],
+                ).show();
               },
               color: Colors.red[300],
               context: context),
@@ -233,6 +281,7 @@ class HomeView extends GetView<HomeController> {
           SizedBox(
             height: 10,
           ),
+          Spacer()
         ],
       ),
     ));

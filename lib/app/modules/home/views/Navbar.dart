@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:first/app/modules/layout/themes.dart';
@@ -11,22 +10,81 @@ import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
 import 'home_add_task.dart';
-import 'home_view.dart';
+import 'vhome_activity.dart';
+import 'vhome_first_page.dart';
+import 'vhome_list.dart';
+import 'vhome_view.dart';
 
 final _homeController = Get.find<HomeController>();
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title, required this.pageNumber})
+      : super(key: key);
 
   final String title;
+  final int pageNumber;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  String _scanBarcode = 'Unknown';
+
+  Future<void> startBarcodeScanStream() async {
+    FlutterBarcodeScanner.getBarcodeStreamReceiver(
+            '#ff6666', 'Cancel', true, ScanMode.BARCODE)!
+        .listen((barcode) => print(barcode));
+  }
+
+  Future<String> scanQR() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      // print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+
+    if (!mounted) return barcodeScanRes;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+    return barcodeScanRes;
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+  }
+
   final autoSizeGroup = AutoSizeGroup();
-  var _bottomNavIndex = 0; //default index of a first screen
+  late int _bottomNavIndex =
+      widget.pageNumber; //default index of a first screen
 
   late AnimationController _fabAnimationController;
   late AnimationController _borderRadiusAnimationController;
@@ -38,7 +96,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   final iconList = <IconData>[
     Icons.dashboard,
+    Icons.schedule_rounded,
     Icons.list,
+    Icons.receipt_long
   ];
 
   @override
@@ -111,14 +171,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return Scaffold(
       extendBody: true,
       body: (_bottomNavIndex == 0)
-          ? HomeView()
+          ? Container()
           : (_bottomNavIndex == 1)
-              ? Container(
-                  child: Text("List"),
-                )
-              : Container(
-                  child: Text("None"),
-                ),
+              ? HomeView()
+              : (_bottomNavIndex == 2)
+                  ? VHomeList()
+                  : (_bottomNavIndex == 3)
+                      ? VHomeActivity()
+                      : Container(
+                          child: Text("None"),
+                        ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: pinkClr,
         child: Icon(
@@ -126,13 +188,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           color: Colors.white,
         ),
         onPressed: () async {
-          _fabAnimationController.reset();
-          _borderRadiusAnimationController.reset();
-          _borderRadiusAnimationController.forward();
-          _fabAnimationController.forward();
-          print("TEST Next Page");
-          await Get.to(HomeAddTask());
-          _homeController.getTask();
+          Get.to(HomeAddTask());
+          // print("TEST Next Page");
+          // await Get.to(QRViewExample());
+          // String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          //     '#ff6666', 'Cancel', true, ScanMode.QR);
+          // await Get.to(HListUpdateProduct());
+          // print(
+          //     "TEST Barcode!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!${barcodeScanRes}");
+          // _homeController.getTask();
           //  _homeController.getTask();
         },
       ),
@@ -141,27 +205,54 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         itemCount: iconList.length,
         tabBuilder: (int index, bool isActive) {
           final color = isActive ? HexColor('#FFA400') : Colors.white;
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                iconList[index],
-                size: 24,
-                color: color,
-              ),
-              const SizedBox(height: 4),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 8),
-              //   child: AutoSizeText(
-              //     "brightness $index",
-              //     maxLines: 1,
-              //     style: TextStyle(color: color),
-              //     group: autoSizeGroup,
-              //   ),
-              // )
-            ],
-          );
+          return (index == 0)
+              ? InkWell(
+                  onTap: () {
+                    Get.toNamed('/dashboard');
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        iconList[0],
+                        size: 24,
+                        color: color,
+                      ),
+                      const SizedBox(height: 4),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 8),
+                      //   child: AutoSizeText(
+                      //     "brightness $index",
+                      //     maxLines: 1,
+                      //     style: TextStyle(color: color),
+                      //     group: autoSizeGroup,
+                      //   ),
+                      // )
+                    ],
+                  ),
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      iconList[index],
+                      size: 24,
+                      color: color,
+                    ),
+                    const SizedBox(height: 4),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 8),
+                    //   child: AutoSizeText(
+                    //     "brightness $index",
+                    //     maxLines: 1,
+                    //     style: TextStyle(color: color),
+                    //     group: autoSizeGroup,
+                    //   ),
+                    // )
+                  ],
+                );
         },
         backgroundColor: HexColor('#373A36'),
         activeIndex: _bottomNavIndex,

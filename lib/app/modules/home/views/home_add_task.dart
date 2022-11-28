@@ -5,6 +5,8 @@ import 'package:first/app/modules/home/views/widget/button.dart';
 import 'package:first/app/modules/home/views/widget/input_field.dart';
 import 'package:first/app/modules/layout/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +26,9 @@ class _HomeAddTaskState extends State<HomeAddTask> {
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _skiController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
+  final _homeController = Get.find<HomeController>();
 
+  late String _barcode = "";
   DateTime _selectedDate = DateTime.now();
   String _selectedStartTime =
       DateFormat("hh:mm a").format(DateTime.now()).toString();
@@ -67,9 +71,18 @@ class _HomeAddTaskState extends State<HomeAddTask> {
                 title: "Name",
                 controller: _titleController,
               ),
-              CustomInputForm(
-                title: "Note",
-                controller: _noteController,
+              InkWell(
+                onTap: () async {
+                  scanBarcodeNormal();
+                  print(_barcode);
+                },
+                child: Container(
+                  width: double.infinity,
+                  child: CustomInputForm(
+                      title: "Barcode",
+                      hint: _barcode,
+                      widget: Icon(Icons.qr_code_scanner)),
+                ),
               ),
               Row(
                 children: [
@@ -222,7 +235,7 @@ class _HomeAddTaskState extends State<HomeAddTask> {
           note: _noteController.text,
           qty: int.parse(_skiController.text),
           skl: int.parse(_qtyController.text),
-          title: _titleController.text,
+          title: _barcode,
           date: DateFormat.yMd().format(_selectedDate),
           startTime: _selectedStartTime,
           endTime: _selectedEndTime,
@@ -231,11 +244,11 @@ class _HomeAddTaskState extends State<HomeAddTask> {
           isCompleted: 0),
     );
 
-    print(returnId);
+    _homeController.getTask();
   }
 
   _validateData() {
-    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+    if (_titleController.text.isNotEmpty && _barcode.isNotEmpty) {
       _addTaskToDb();
       Get.back();
     } else {
@@ -334,5 +347,27 @@ class _HomeAddTaskState extends State<HomeAddTask> {
         minute: int.parse(_selectedStartTime.split(":")[1].split(" ")[0]),
       ),
     );
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _barcode = barcodeScanRes;
+    });
   }
 }
