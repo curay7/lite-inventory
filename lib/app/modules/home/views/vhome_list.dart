@@ -1,4 +1,4 @@
-import 'package:first/app/data/model/task.dart';
+import 'package:first/app/data/model/product.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -192,22 +192,22 @@ class _VHomeListState extends State<VHomeList> {
                                         ),
                                   ),
                                 ),
-                                ProductListTile(Task(
+                                ProductListTile(Product(
                                     id: 1,
                                     title: "Product 1",
                                     skl: 100,
                                     qty: 100)),
-                                ProductListTile(Task(
+                                ProductListTile(Product(
                                     id: 1,
                                     title: "Product 2",
                                     skl: 100,
                                     qty: 100)),
-                                ProductListTile(Task(
+                                ProductListTile(Product(
                                     id: 1,
                                     title: "Product 3",
                                     skl: 100,
                                     qty: 100)),
-                                ProductListTile(Task(
+                                ProductListTile(Product(
                                     id: 1,
                                     title: "Product 4",
                                     skl: 100,

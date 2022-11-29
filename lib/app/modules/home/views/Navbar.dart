@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
@@ -7,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../controllers/home_controller.dart';
 import 'home_add_task.dart';
+import 'home_list_update_product.dart';
 import 'vhome_activity.dart';
 import 'vhome_first_page.dart';
 import 'vhome_list.dart';
@@ -175,29 +178,67 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           : (_bottomNavIndex == 1)
               ? HomeView()
               : (_bottomNavIndex == 2)
-                  ? VHomeList()
+                  ? ListUpdateProduct()
                   : (_bottomNavIndex == 3)
                       ? VHomeActivity()
                       : Container(
                           child: Text("None"),
                         ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: pinkClr,
+        backgroundColor: bluish,
         child: Icon(
-          Icons.add,
+          size: 40,
+          Icons.qr_code_scanner_sharp,
           color: Colors.white,
         ),
         onPressed: () async {
-          Get.to(HomeAddTask());
-          // print("TEST Next Page");
-          // await Get.to(QRViewExample());
-          // String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          //     '#ff6666', 'Cancel', true, ScanMode.QR);
+          String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+              '#ff6666', 'Cancel', true, ScanMode.QR);
+
+          // This is how I iterate
+          var contain = await _homeController.productList
+              .where((element) => element.note == barcodeScanRes);
+
+          if (contain.isEmpty) {
+            Alert(
+              context: context,
+              type: AlertType.warning,
+              title: "Warning",
+              desc:
+                  "The product you're looking for does not exist. Do you want to create a product?",
+              buttons: [
+                DialogButton(
+                  child: Text(
+                    "Create",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Get.to(HomeAddProduct());
+                  },
+                  color: Color.fromRGBO(0, 179, 134, 1.0),
+                ),
+                DialogButton(
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  gradient: LinearGradient(colors: [
+                    Color.fromRGBO(116, 116, 191, 1.0),
+                    Color.fromRGBO(52, 138, 199, 1.0)
+                  ]),
+                )
+              ],
+            ).show();
+          } else {
+            _homeController.findProductByBarcode(barcodeScanRes);
+            Get.to(ListUpdateProduct());
+          }
           // await Get.to(HListUpdateProduct());
-          // print(
-          //     "TEST Barcode!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!${barcodeScanRes}");
-          // _homeController.getTask();
-          //  _homeController.getTask();
+          print(
+              "TEST Barcode!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!${barcodeScanRes}");
+          _homeController.getProduct();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -220,15 +261,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         color: color,
                       ),
                       const SizedBox(height: 4),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                      //   child: AutoSizeText(
-                      //     "brightness $index",
-                      //     maxLines: 1,
-                      //     style: TextStyle(color: color),
-                      //     group: autoSizeGroup,
-                      //   ),
-                      // )
                     ],
                   ),
                 )
@@ -242,15 +274,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       color: color,
                     ),
                     const SizedBox(height: 4),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                    //   child: AutoSizeText(
-                    //     "brightness $index",
-                    //     maxLines: 1,
-                    //     style: TextStyle(color: color),
-                    //     group: autoSizeGroup,
-                    //   ),
-                    // )
                   ],
                 );
         },

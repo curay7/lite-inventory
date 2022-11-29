@@ -1,6 +1,6 @@
 import 'dart:ffi';
 
-import 'package:first/app/data/model/task.dart';
+import 'package:first/app/data/model/product.dart';
 import 'package:first/app/modules/home/views/widget/button.dart';
 import 'package:first/app/modules/home/views/widget/input_field.dart';
 import 'package:first/app/modules/layout/themes.dart';
@@ -20,16 +20,16 @@ class HomeUpdateProduct extends StatefulWidget {
 }
 
 class _HomeUpdateProductState extends State<HomeUpdateProduct> {
-  final HomeController homeTaskController = Get.put(HomeController());
+  final HomeController homeProductController = Get.put(HomeController());
   final TextEditingController _titleController =
-      TextEditingController(text: _homeController.updateTask.title);
+      TextEditingController(text: _homeController.updateProduct.title);
   final TextEditingController _noteController =
-      TextEditingController(text: _homeController.updateTask.note);
+      TextEditingController(text: _homeController.updateProduct.note);
   final TextEditingController _skiController =
-      TextEditingController(text: _homeController.updateTask.skl.toString());
+      TextEditingController(text: _homeController.updateProduct.skl.toString());
 
   final TextEditingController _qtyController =
-      TextEditingController(text: _homeController.updateTask.qty.toString());
+      TextEditingController(text: _homeController.updateProduct.qty.toString());
 
   DateTime _selectedDate = DateTime.now();
   String _selectedStartTime =
@@ -69,7 +69,7 @@ class _HomeUpdateProductState extends State<HomeUpdateProduct> {
           child: Column(
             children: [
               Text(
-                "Update Product ${_homeController.updateTask.title}",
+                "Update Product ${_homeController.updateProduct.title}",
                 style: headingStyle,
               ),
               CustomInputForm(
@@ -101,94 +101,6 @@ class _HomeUpdateProductState extends State<HomeUpdateProduct> {
                   ),
                 ],
               ),
-              // CustomInputForm(
-              //   title: "Date",
-              //   hint: DateFormat.yMd().format(_selectedDate),
-              //   widget: IconButton(
-              //     icon: const Icon(Icons.calendar_today_outlined),
-              //     onPressed: () {
-              //       _getDateFromUser();
-              //     },
-              //   ),
-              // ),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: CustomInputForm(
-              //         title: "Start Time",
-              //         hint: _selectedStartTime,
-              //         widget: IconButton(
-              //           icon: const Icon(Icons.access_time_rounded),
-              //           onPressed: () {
-              //             _getTimeFromUser(isStartedTime: true);
-              //           },
-              //         ),
-              //       ),
-              //     ),
-              //     const SizedBox(
-              //       width: 12,
-              //     ),
-              //     Expanded(
-              //       child: CustomInputForm(
-              //         title: "End Time",
-              //         hint: _selectedEndTime,
-              //         widget: IconButton(
-              //           icon: const Icon(Icons.access_time_rounded),
-              //           onPressed: () {
-              //             _getTimeFromUser(isStartedTime: false);
-              //           },
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // CustomInputForm(
-              //   title: "Remind",
-              //   hint: "$_selectedReminder Minutes early",
-              //   widget: DropdownButton<int>(
-              //       elevation: 4,
-              //       iconSize: 32,
-              //       style: inputSubTitleStyle,
-              //       underline: Container(
-              //         height: 0,
-              //       ),
-              //       items: reminderList.map((int value) {
-              //         return new DropdownMenuItem<int>(
-              //           value: value,
-              //           child: new Text(value.toString()),
-              //         );
-              //       }).toList(),
-              //       onChanged: (newVal) {
-              //         setState(() {
-              //           _selectedReminder = newVal!;
-              //         });
-              //       }),
-              // ),
-              // CustomInputForm(
-              //   title: "Repeat",
-              //   hint: _selectedRepeat,
-              //   widget: DropdownButton<String>(
-              //       elevation: 4,
-              //       iconSize: 32,
-              //       style: inputSubTitleStyle,
-              //       underline: Container(
-              //         height: 0,
-              //       ),
-              //       items: repeatList.map((String value) {
-              //         return new DropdownMenuItem<String>(
-              //           value: value,
-              //           child: new Text(value.toString()),
-              //         );
-              //       }).toList(),
-              //       onChanged: (newVal) {
-              //         setState(() {
-              //           _selectedRepeat = newVal!;
-              //         });
-              //       }),
-              // ),
-              // const SizedBox(
-              //   height: 8,
-              // ),
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Row(
@@ -231,9 +143,9 @@ class _HomeUpdateProductState extends State<HomeUpdateProduct> {
   }
 
   _updateProductToDb() async {
-    Future<int> returnId = homeTaskController.updateProduct(
-      id: _homeController.updateTask.id!,
-      task: Task(
+    Future<int> returnId = homeProductController.updateProductController(
+      id: _homeController.updateProduct.id!,
+      product: Product(
           note: _noteController.text,
           qty: int.parse(_qtyController.text),
           skl: int.parse(_skiController.text),

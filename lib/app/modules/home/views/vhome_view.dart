@@ -1,7 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:first/app/data/services/theme_services.dart';
-import 'package:first/app/modules/home/views/home_add_task.dart';
 import 'package:first/app/modules/home/views/home_update_product.dart';
 import 'package:first/app/modules/home/views/widget/button.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -10,13 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../data/model/task.dart';
+import '../../../data/model/product.dart';
 import '../../layout/themes.dart';
 import '../controllers/home_controller.dart';
 import 'package:intl/intl.dart';
 
-import 'widget/task_tile.dart';
-import 'widget/task_tile_warning.dart';
+import 'widget/product_tile.dart';
+import 'widget/product_tile_warning.dart';
 
 final _homeController = Get.find<HomeController>();
 
@@ -33,7 +32,7 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: context.theme.backgroundColor,
         body: Column(
           children: [
-            _addTaskBar(),
+            _addProductBar(),
             _addDateBar(_homeController.selectedDate),
             const SizedBox(
               height: 17,
@@ -61,11 +60,6 @@ class HomeView extends GetView<HomeController> {
                       child: ElevatedButton(
                           onPressed: () {
                             _homeController.selectedDate.value = DateTime.now();
-                            // Get.toNamed("/splash");
-                            // _selectedDate = DateTime.now();
-                            // print(_selectedDate);
-                            // _homeController.getTask();
-                            // () {};
                           },
                           child: Icon(Icons.repeat)),
                     )
@@ -80,9 +74,9 @@ class HomeView extends GetView<HomeController> {
                     ? const EdgeInsets.only(top: 50)
                     : EdgeInsets.all(0),
                 child: ListView.builder(
-                  itemCount: _homeController.taskList.length,
+                  itemCount: _homeController.productList.length,
                   itemBuilder: ((context, index) {
-                    Task task = _homeController.taskList[index];
+                    Product product = _homeController.productList[index];
 
                     print(
                         "Test 1 ${_homeController.selectedDate.value.day}  Test 2 ${DateTime.now().day}");
@@ -102,9 +96,9 @@ class HomeView extends GetView<HomeController> {
                                   child: GestureDetector(
                                     onTap: () {
                                       print(_homeController.selectedDate.value);
-                                      _showBottomSheet(context, task);
+                                      _showBottomSheet(context, product);
                                     },
-                                    child: TaskTile(task),
+                                    child: ProductTile(product),
                                   ),
                                 )
                               ],
@@ -114,7 +108,7 @@ class HomeView extends GetView<HomeController> {
                       );
                     }
 
-                    if (task.date ==
+                    if (product.date ==
                         DateFormat.yMd()
                             .format(_homeController.selectedDate.value)) {
                       return AnimationConfiguration.staggeredList(
@@ -126,9 +120,9 @@ class HomeView extends GetView<HomeController> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      _showBottomSheet(context, task);
+                                      _showBottomSheet(context, product);
                                     },
-                                    child: TaskTileWarning(task),
+                                    child: ProductTileWarning(product),
                                   ),
                                 )
                               ],
@@ -152,11 +146,11 @@ class HomeView extends GetView<HomeController> {
       child: Obx(
         (() {
           return ListView.builder(
-            itemCount: _homeController.taskList.length,
+            itemCount: _homeController.productList.length,
             itemBuilder: ((context, index) {
-              Task task = _homeController.taskList[index];
+              Product product = _homeController.productList[index];
 
-              if (task.title!.isNotEmpty) {
+              if (product.title!.isNotEmpty) {
                 return AnimationConfiguration.staggeredList(
                   position: index,
                   child: SlideAnimation(
@@ -166,10 +160,10 @@ class HomeView extends GetView<HomeController> {
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                _homeController.getTask();
-                                _showBottomSheet(context, task);
+                                _homeController.getProduct();
+                                _showBottomSheet(context, product);
                               },
-                              child: TaskTile(task),
+                              child: ProductTile(product),
                             ),
                           )
                         ],
@@ -187,7 +181,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  _showBottomSheet(BuildContext context, Task task) {
+  _showBottomSheet(BuildContext context, Product product) {
     Get.bottomSheet(Container(
       padding: EdgeInsets.only(top: 4),
       height: MediaQuery.of(context).size.height * 0.40,
@@ -206,9 +200,7 @@ class HomeView extends GetView<HomeController> {
           _bottomSheetBotton(
               label: "Update Product",
               onTap: () {
-                // _homeController.markCompletedTask(task.id!);
-                //_homeController.productIdUpdate.value = task.id!;
-                _homeController.findProductUpdate(task.id!);
+                _homeController.findProductUpdate(product.id!);
                 Get.to(HomeUpdateProduct());
               },
               color: primaryClr,
@@ -245,7 +237,7 @@ class HomeView extends GetView<HomeController> {
                         ScaffoldMessenger.of(context)
                           ..hideCurrentSnackBar()
                           ..showSnackBar(snackBar);
-                        _homeController.delete(task);
+                        _homeController.delete(product);
 
                         Get.back();
                       },
@@ -342,7 +334,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  _addTaskBar() {
+  _addProductBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -369,7 +361,6 @@ class HomeView extends GetView<HomeController> {
             ],
           ),
         ),
-
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -385,15 +376,6 @@ class HomeView extends GetView<HomeController> {
             ],
           ),
         ),
-
-        // homeBtn(
-        //   label: "+ Product",
-        // onTap: (() async {
-        //   print("TEST Next Page");
-        //   await Get.to(HomeAddTask());
-        //   _homeController.getTask();
-        // }),
-        // )
       ],
     );
   }
@@ -421,7 +403,7 @@ class HomeView extends GetView<HomeController> {
               fontSize: 14, fontWeight: FontWeight.w600, color: Colors.grey),
         ),
         onDateChange: (date) {
-          _homeController.getTask();
+          _homeController.getProduct();
           _homeController.selectedDate.value = date;
         },
       ),

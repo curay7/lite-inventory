@@ -1,11 +1,11 @@
-import 'package:first/app/data/model/task.dart';
+import 'package:first/app/data/model/product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
   static Database? _db;
   static final int _version = 1;
-  static final String _tableName = "task";
+  static final String _tableName = "product";
 
   static Future<void> initDb() async {
     if (_db != null) {
@@ -13,7 +13,7 @@ class DBHelper {
     }
 
     try {
-      String _path = await getDatabasesPath() + 'tasks.db';
+      String _path = await getDatabasesPath() + 'products.db';
       _db = await openDatabase(
         _path,
         version: _version,
@@ -37,31 +37,27 @@ class DBHelper {
     }
   }
 
-  static Future<int> insert(Task? task) async {
+  static Future<int> insert(Product? product) async {
     print("Insert Db");
-    return await _db?.insert(_tableName, task!.toJson()) ?? 1;
+    return await _db?.insert(_tableName, product!.toJson()) ?? 1;
   }
 
   static Future<List<Map<String, dynamic>>> query() async {
     return await _db!.query(_tableName);
   }
 
-  static delete(Task task) async {
-    return await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
+  static delete(Product product) async {
+    return await _db!
+        .delete(_tableName, where: 'id=?', whereArgs: [product.id]);
   }
 
-  static update({required int id, required Task task}) async {
+  static update({required int id, required Product product}) async {
     print("DATABASE");
     print(id);
-    // print(task.skl);
-    // print(task.qty);
-    // final data = {'title': task.title, 'skl': 777, 'qty': 777};
-    // return await _db!
-    //     .update(_tableName, data, where: "id = ?", whereArgs: [task.id]);
     return await _db!.rawUpdate('''
-              UPDATE task
+              UPDATE product
               SET isCompleted = ?, title = ? , skl = ? , qty = ?
               WHERE id =?
-            ''', [1, task.title, task.skl, task.qty, id]);
+            ''', [1, product.title, product.skl, product.qty, id]);
   }
 }

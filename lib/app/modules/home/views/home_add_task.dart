@@ -1,6 +1,6 @@
 import 'dart:ffi';
 
-import 'package:first/app/data/model/task.dart';
+import 'package:first/app/data/model/product.dart';
 import 'package:first/app/modules/home/views/widget/button.dart';
 import 'package:first/app/modules/home/views/widget/input_field.dart';
 import 'package:first/app/modules/layout/themes.dart';
@@ -10,18 +10,19 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../data/model/product.dart';
 import '../controllers/home_controller.dart';
 import 'widget/input_field_number.dart';
 
-class HomeAddTask extends StatefulWidget {
-  const HomeAddTask({Key? key}) : super(key: key);
+class HomeAddProduct extends StatefulWidget {
+  const HomeAddProduct({Key? key}) : super(key: key);
 
   @override
-  State<HomeAddTask> createState() => _HomeAddTaskState();
+  State<HomeAddProduct> createState() => _HomeAddProductState();
 }
 
-class _HomeAddTaskState extends State<HomeAddTask> {
-  final HomeController homeTaskController = Get.put(HomeController());
+class _HomeAddProductState extends State<HomeAddProduct> {
+  final HomeController homeProductController = Get.put(HomeController());
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _skiController = TextEditingController();
@@ -229,13 +230,13 @@ class _HomeAddTaskState extends State<HomeAddTask> {
     );
   }
 
-  _addTaskToDb() async {
-    int returnId = await homeTaskController.addTask(
-      task: Task(
-          note: _noteController.text,
+  _addProductToDb() async {
+    int returnId = await homeProductController.addProduct(
+      product: Product(
+          note: _barcode,
           qty: int.parse(_skiController.text),
           skl: int.parse(_qtyController.text),
-          title: _barcode,
+          title: _titleController.text,
           date: DateFormat.yMd().format(_selectedDate),
           startTime: _selectedStartTime,
           endTime: _selectedEndTime,
@@ -244,12 +245,12 @@ class _HomeAddTaskState extends State<HomeAddTask> {
           isCompleted: 0),
     );
 
-    _homeController.getTask();
+    _homeController.getProduct();
   }
 
   _validateData() {
     if (_titleController.text.isNotEmpty && _barcode.isNotEmpty) {
-      _addTaskToDb();
+      _addProductToDb();
       Get.back();
     } else {
       Get.snackbar("Required", "All fields are Required!",

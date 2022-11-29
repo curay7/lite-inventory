@@ -4,19 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:first/app/data/services/notification_services.dart';
 
-import '../../../data/model/task.dart';
+import '../../../data/model/product.dart';
 
 class HomeController extends GetxController {
   //TODO: Implement HomeController
 
-  var taskList = <Task>[].obs;
+  var productList = <Product>[].obs;
+  var productListUpdate = <Product>[].obs;
   Rx<DateTime> selectedDate = DateTime.now().obs;
-  late Task updateTask;
+  late Product updateProduct;
 
   @override
   void onInit() {
     super.onInit();
-    getTask();
+    getProduct();
   }
 
   @override
@@ -37,35 +38,58 @@ class HomeController extends GetxController {
   }
 
   void findProductUpdate(int id) {
-    taskList.forEach((element) {
+    productList.forEach((element) {
       print(element);
       if (element.id == id) {
-        updateTask = element;
+        updateProduct = element;
       }
     });
   }
 
-  void getTask() async {
-    List<Map<String, dynamic>> tasks = await DBHelper.query();
-    taskList.assignAll(
-      tasks.map(
-        (data) => new Task.fromJson(data),
+  void findProductByBarcode(String barcode) async {
+    productList.forEach((element) {
+      if (element.note == barcode) {
+        // This is how I iterate
+        var contain =
+            productListUpdate.where((element) => element.note == barcode);
+
+        if (contain.isEmpty) {
+          productListUpdate.add(element);
+        }
+      }
+    });
+  }
+
+  void getProduct() async {
+    List<Map<String, dynamic>> products = await DBHelper.query();
+    productList.assignAll(
+      products.map(
+        (data) => new Product.fromJson(data),
       ),
     );
   }
 
-  Future<int> addTask({Task? task}) async {
-    return await DBHelper.insert(task);
+  Future<int> addProduct({Product? product}) async {
+    return await DBHelper.insert(product);
   }
 
-  void delete(Task task) {
-    var id = DBHelper.delete(task);
-    getTask();
+  void delete(Product product) {
+    var id = DBHelper.delete(product);
+    getProduct();
   }
 
-  Future<int> updateProduct({required int id, Task? task}) async {
-    int returnId = await DBHelper.update(id: id, task: task!);
-    getTask();
+  Future<int> updateProductController(
+      {required int id, Product? product}) async {
+    int returnId = await DBHelper.update(id: id, product: product!);
+    productListUpdate[
+            productListUpdate.indexWhere((element) => element.id == id)]
+        .qty = product.qty;
+
+    print("UPDATE!!!");
+    print(productListUpdate[
+            productListUpdate.indexWhere((element) => element.id == id)]
+        .qty);
+    getProduct();
     return returnId;
   }
 }

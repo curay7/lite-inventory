@@ -1,4 +1,4 @@
-import 'package:first/app/data/model/task.dart';
+import 'package:first/app/data/model/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../layout/themes.dart';
 
 class ProductListTile extends StatelessWidget {
-  final Task? task;
-  ProductListTile(this.task);
+  final Product? product;
+  ProductListTile(this.product);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ProductListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  task?.title ?? "",
+                  product?.title ?? "",
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(
                         fontSize: 16,
@@ -64,7 +64,7 @@ class ProductListTile extends StatelessWidget {
                             ),
                             SizedBox(width: 4),
                             Text(
-                              "Quantity : ${task!.qty}",
+                              "Quantity : ${product!.qty}",
                               style: GoogleFonts.lato(
                                 textStyle:
                                     TextStyle(fontSize: 13, color: grayClr),
@@ -81,7 +81,7 @@ class ProductListTile extends StatelessWidget {
                             ),
                             SizedBox(width: 4),
                             Text(
-                              "SKL : ${task!.skl}",
+                              "SKL : ${product!.skl}",
                               style: GoogleFonts.lato(
                                 textStyle:
                                     TextStyle(fontSize: 13, color: grayClr),
@@ -95,7 +95,7 @@ class ProductListTile extends StatelessWidget {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  task?.note ?? "",
+                  product?.note ?? "",
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(fontSize: 15, color: grayClr),
                   ),
@@ -112,7 +112,7 @@ class ProductListTile extends StatelessWidget {
           RotatedBox(
             quarterTurns: 3,
             child: Text(
-              task!.isCompleted == 1 ? "Out Stock" : "In Stock",
+              product!.isCompleted == 1 ? "Out Stock" : "In Stock",
               style: GoogleFonts.lato(
                 textStyle: TextStyle(
                     fontSize: 10, fontWeight: FontWeight.bold, color: grayClr),

@@ -1,13 +1,13 @@
-import 'package:first/app/data/model/task.dart';
+import 'package:first/app/data/model/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../layout/themes.dart';
 
-class TaskTile extends StatelessWidget {
-  final Task? task;
-  TaskTile(this.task);
+class ProductTileWarning extends StatelessWidget {
+  final Product? task;
+  ProductTileWarning(this.task);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class TaskTile extends StatelessWidget {
         //  width: SizeConfig.screenWidth * 0.78,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: _getBGClr(task?.color ?? 0),
+          color: (task!.qty! < 5) ? pinkClr : yellowClr,
         ),
         child: Row(children: [
           Container(
@@ -30,7 +30,7 @@ class TaskTile extends StatelessWidget {
             color: Colors.transparent,
             child: Image(
               image: AssetImage("assets/images/box-transparent.png"),
-              fit: BoxFit.cover,
+              fit: BoxFit.fitWidth,
             ),
           ),
           Expanded(
@@ -112,7 +112,7 @@ class TaskTile extends StatelessWidget {
           RotatedBox(
             quarterTurns: 3,
             child: Text(
-              task!.isCompleted == 1 ? "Out Stock" : "In Stock",
+              task!.isCompleted == 1 ? "Out Stock" : "Out Stock",
               style: GoogleFonts.lato(
                 textStyle: TextStyle(
                     fontSize: 10,
@@ -124,18 +124,5 @@ class TaskTile extends StatelessWidget {
         ]),
       ),
     );
-  }
-
-  _getBGClr(int no) {
-    switch (no) {
-      case 0:
-        return primaryClr;
-      case 1:
-        return pinkClr;
-      case 2:
-        return yellowClr;
-      default:
-        return primaryClr;
-    }
   }
 }

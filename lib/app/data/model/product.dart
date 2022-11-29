@@ -1,4 +1,4 @@
-class Task {
+class Product {
   int? id;
   String? title;
   String? note;
@@ -11,7 +11,7 @@ class Task {
   int? color;
   int? remind;
 
-  Task({
+  Product({
     this.id,
     this.title,
     this.note,
@@ -24,7 +24,7 @@ class Task {
     this.color,
     this.remind,
   });
-  Task.fromJson(Map<String, dynamic> json) {
+  Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     note = json['note'];
