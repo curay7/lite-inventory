@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../login/views/login_view.dart';
 import 'splash_view.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     print("TEST init");
     Timer(Duration(seconds: 4), () {
-      Get.toNamed("/home");
+      Get.to(LoginView());
     });
   }
 
